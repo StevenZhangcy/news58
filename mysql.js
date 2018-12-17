@@ -1,4 +1,5 @@
-const mysql      = require('mysql');
+
+const mysql = require('mysql');
 const connection = mysql.createConnection({
   host     : 'localhost',
   user     : 'root',
@@ -6,11 +7,12 @@ const connection = mysql.createConnection({
   database : 'news58'
 });
  
-connection.connect();
+// connection.query('SELECT 1 + 1 AS solution', function (error, results, fields) {
+//   if (error) throw error;
+//   console.log('The solution is: ', results[0].solution);
+// });
  
-connection.query('SELECT 1 + 1 AS solution', function (error, results, fields) {
-  if (error) throw error;
-  console.log('The solution is: ', results[0].solution);
-});
- 
-connection.end();
+// connection.end();
+// const conn = 
+
+module.exports = connection.connect();

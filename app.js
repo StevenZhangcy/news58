@@ -11,9 +11,9 @@ app.use('/public',express.static('./public'));
 app.use('/node_modules',express.static('./node_modules'));
 // 配置body
 // parse application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.urlencoded({ extended: false }));
 // parse application/json
-app.use(bodyParser.json())
+app.use(bodyParser.json());
 app.engine('html', require('express-art-template'));
 
 // 挂在路由
