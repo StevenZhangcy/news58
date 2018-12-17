@@ -46,6 +46,10 @@
 
             $.post('/signin',data,function (data) {
                     console.log(data);
+                    if (data.code == 200) {
+                       return location.href = '/';
+                    }
+                    alert(data.msg);
                 }  
             )
                 
