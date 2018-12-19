@@ -3,15 +3,34 @@ const express = require('express');
 // const template = require('art-template');
 const bodyParser = require('body-parser');
 const router = require('./router');
+const session = require('express-session');
+var MySQLStore = require('express-mysql-session')(session);
 // 创建app实例对象
 const app = express();
+const options = {
+    host: 'localhost',
+    port: 3306,
+    user: 'root',
+    password: 'root',
+    database: 'news58'
+};
+const sessionStore = new MySQLStore(options);
+app.use(session({
+    key: 'session_cookie_name',
+    secret: 'session_cookie_secret',
+    store: sessionStore,
+    resave: false,
+    saveUninitialized: false
+}));
 
 // 配置静态资源  自己的 和 第三方的
-app.use('/public',express.static('./public'));
-app.use('/node_modules',express.static('./node_modules'));
+app.use('/public', express.static('./public'));
+app.use('/node_modules', express.static('./node_modules'));
 // 配置body
 // parse application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({
+    extended: false
+}));
 // parse application/json
 app.use(bodyParser.json());
 app.engine('html', require('express-art-template'));
@@ -21,6 +40,6 @@ app.engine('html', require('express-art-template'));
 app.use(router);
 
 // 监听端口号
-app.listen('8000',() => {
+app.listen('8000', () => {
     console.log('---success---');
 })
