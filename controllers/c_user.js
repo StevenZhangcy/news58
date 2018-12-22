@@ -2,20 +2,20 @@
 const m_user = require('../moudel/m_user');
 
 //  渲染登录页面
-exports.showSignin = (req, res) => {
+exports.showSignin = (req, res,next) => {
     // res.write('run it----');
     // res.end();
     res.render('signin.html');
 };
 // 处理登录请求
-exports.handlerSignin = (req, res) => {
+exports.handlerSignin = (req, res,next) => {
     //  1 获取表单数据
     let body = req.body;
     // console.log(body);
     // 先验证邮箱是否存在
     m_user.checkEmail(body.email, (err, data) => {
         if (err) {
-            throw err;
+            next(err);
         }
         if (data.length === 0) {
             return res.send({
@@ -42,7 +42,7 @@ exports.handlerSignin = (req, res) => {
     })
 };
 // 退出功能
-exports.signout = (req, res) => {
+exports.signout = (req, res,next) => {
     // 清除session
     delete req.session.user;
     // 页面跳转到登录
@@ -50,23 +50,18 @@ exports.signout = (req, res) => {
 };
 
 // 注册功能
-exports.signup = (req, res) => {
+exports.signup = (req, res,next) => {
     res.render('signup.html');
 }
 
-
-
 // 处理表单提交数据
-exports.handlerSignup = (req, res) => {
+exports.handlerSignup = (req, res,next) => {
     const body = req.body;
     // console.log(body);
     // 先查询数据库查询email,如果输入email与数据库有 则用户名存在
     m_user.checkEmail(body.email, (err, data) => {
         if (err) {
-            return res.send({
-                code: 500,
-                msg: err.message
-            })
+            next(err);
         };
         // 如果邮箱存在
         if (data[0]) {
@@ -78,10 +73,7 @@ exports.handlerSignup = (req, res) => {
         // ----用户名可以用再次查询用户名 判断昵称能否使用
         m_user.checkNickname(body.nickname, (err, data) => {
             if (err) {
-                return res.send({
-                    code: 500,
-                    msg: err.message
-                })
+                next(err);
             };
             if (data[0]) {
                 return res.send({
@@ -92,10 +84,7 @@ exports.handlerSignup = (req, res) => {
             // ----昵称不存在可以使用 可以添加新用户储存到数据库
             m_user.addUser(body, (err, data) => {
                 if (err) {
-                    return res.send({
-                        code: 500,
-                        msg: err.message
-                    })
+                    next(err);
                 }
                 res.send({
                     code: 200,

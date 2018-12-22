@@ -31,9 +31,7 @@ exports.handlerDetailarticle = (articleID, callback) => {
         callback(null, data);
     })
 };
-
 //删除文章
-
 exports.handlerDeletearticle = (articleID, callback) => {
     const sql = 'DELETE FROM `topics` WHERE id =?';
     connection.query(sql, articleID, (err, data) => {
@@ -43,7 +41,6 @@ exports.handlerDeletearticle = (articleID, callback) => {
         callback(null, data);
     })
 };
-
 // 编辑文章
 exports.handleEditarticle = (articleID,body,callback) => {
     const sql = 'UPDATE `topics` SET ? WHERE id = ?';

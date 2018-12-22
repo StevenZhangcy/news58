@@ -3,7 +3,7 @@ const m_article = require('../moudel/m_artilce');
 // 引入时间格式包
 const moment = require('moment');
 // 渲染文章列表
-exports.showArticle = (req, res) => {
+exports.showArticle = (req, res,next) => {
     m_article.findArticle((err, data) => {
 
         // console.log(data);
@@ -14,11 +14,11 @@ exports.showArticle = (req, res) => {
     })
 };
 // 接收 发起文章请求处理
-exports.createArticle = (req, res) => {
+exports.createArticle = (req, res,next) => {
     res.render('topic/create.html');
 }
 // 处理创建文章到数据库
-exports.handlerArticle = (req, res) => {
+exports.handlerArticle = (req, res,next) => {
     const body = req.body;
     // 给body添加成员创建时间
     body.createdAt = moment().format();
@@ -27,10 +27,7 @@ exports.handlerArticle = (req, res) => {
     // console.log(body); 
     m_article.addArticle(body, (err, data) => {
         if (err) {
-            return res.send({
-                code: 500,
-                msg: '服务器请求错误'
-            });
+            next(err);
         }
         res.send({
             code: 200,
@@ -41,59 +38,52 @@ exports.handlerArticle = (req, res) => {
 };
 
 // 渲染 详情页面
-exports.showDetailarticle = (req, res) => {
+exports.showDetailarticle = (req, res,next) => {
     // 查找对应id显示的文章动态路由
     const articleID = req.params.articleID;
+    // console.log(req.session.user.id);
     // console.log(articleID);
     m_article.handlerDetailarticle(articleID, (err, data) => {
         if (err) {
-            return res.send({
-                code: 500,
-                msg: err.message
-            })
+            next(err);
         }
         // console.log(data);
         // 查询完毕返回的数据
+        console.log(data[0]);
         res.render('topic/show.html', {
-            article: data[0]
+            article: data[0],
+            userId: req.session.user.id || 0
+            // console.log(user);
         });
     })
 };
 // 删除文章
-exports.deleteArticle = (req, res) => {
+exports.deleteArticle = (req, res,next) => {
     const articleID = req.params.articleID;
     m_article.handlerDeletearticle(articleID, (err, data) => {
         if (err) {
-            return res.send({
-                code: 500,
-                msg: err.message
-            })
+            next(err);
         }
         // 如果删除成功 返回详情页
         res.redirect('/');
     });
 };
-
 // 点击按钮跳转到相应的编辑页面
-exports.editArticle = (req, res) => {
+exports.editArticle = (req, res,next) => {
     const articleID = req.params.articleID;
     // console.log(articleID,body);
     // 根据id查询文章   
     m_article.handlerDetailarticle(articleID, (err, data) => {
         if (err) {
-            return res.send({
-                code: 500,
-                msg: err.message
-            })
+            next(err);
         }
         res.render('topic/edit.html', {
             article: data[0]
         });
     });
 };
-
 // 处理编辑文章
-exports.handleEditarticle = (req, res) => {
+exports.handleEditarticle = (req, res,next) => {
     const articleID = req.params.articleID;
     const body = req.body;
     // console.log(body);

@@ -10,7 +10,6 @@
         }
     </style>
 </head>
-
 <body>
     {{include '../_includes/header.html'}}
     <section class="container">
@@ -22,8 +21,10 @@
                 {{else}}
                 <article class="markdown-body">
                     <h1>{{article.title}}</h1>
+                    {{if article.userId === userId}}
                     <a href="/topic/detail/edit/{{article.id}}">编辑</a>
                     <a href="/topic/detail/delete/{{article.id}}" id="delete_topic">删除</a>
+                    {{/if}}
                     <hr> {{article.content}}
                 </article>
                 <div class="panel panel-default">
@@ -31,7 +32,7 @@
                         <span>lzz</span> commented
                         <span>24 minutes ago</span>
                         <span class="action">
-                             <a href=""><i class="glyphicon glyphicon-thumbs-up pull-right"></i></a>
+                            <a href=""><i class="glyphicon glyphicon-thumbs-up pull-right"></i></a>
                             <a href=""><i class="glyphicon glyphicon-remove-circle pull-right"></i></a>
                             <a href=""><i class="glyphicon glyphicon-remove-circle pull-right"></i></a>
                         </span>
